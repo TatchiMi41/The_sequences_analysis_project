@@ -1,9 +1,10 @@
 import requests
 import random
+import pandas as pd
 
 
 def parsing(url: str):
-    '''Obtaining nucleotide sequences from a database epd.expasy.org'''
+    """Obtaining nucleotide sequences from a database epd.expasy.org"""
     st_accept = 'text/html'
     st_useragent = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 '
                     'YaBrowser/23.11.0.0 Safari/537.36')
@@ -16,7 +17,7 @@ def parsing(url: str):
 
 
 def clean_sequences(file_name):
-    '''Creating clean sequences without unnecessary information'''
+    """Creating clean sequences without unnecessary information"""
     with open(file_name, 'r') as f:
         lines = f.readlines()
 
@@ -41,7 +42,7 @@ def clean_sequences(file_name):
 
 
 def create_reverse_complementary_sequences(clean_sequensec_file):
-    '''Creation of back-complementary nucleotide sequences'''
+    """Creation of back-complementary nucleotide sequences"""
     with open(clean_sequensec_file, 'r') as f:
         lines = f.readlines()
         reversed_lines = []
@@ -65,21 +66,33 @@ def create_reverse_complementary_sequences(clean_sequensec_file):
 
 
 def create_random_sequences(str_quantity):
-    '''Creating random sequences of nucleotides'''
+    """Creating random sequences of nucleotides"""
     with open('random_sequences.txt', 'w+') as f:
         nucleotides = ['A', 'T', 'G', 'C']
         sequence = ''
-        for str in range(str_quantity):
+        for string in range(str_quantity):
             for nucl in range(81):
                 sequence += random.choice(nucleotides)
 
             f.write(sequence + '\n')
             sequence = ''
 
-req = parsing('https://epd.expasy.org/epd/wwwtmp/hg38_C2y3h.fa')
 
-with open('dirty_sequences.txt', 'w+') as f:
-    f.write(req.text)
+def calculate_data_dinucleotide_property_database(sequences_file):
+    df = pd.read_csv('Dinucleotide Property Database.txt', sep='\t')
+    with open(sequences_file, 'r') as f:
+        lines = f.readlines()
+        _stacking_energy = {i: 0 for i in range(-50, 31)}
+        for line in lines:
+            for nuleotide in line:
+                dinucleotide = ''
+                dinucleotide += nuleotide + line[line.index(nuleotide) + 1]
+
+
+# req = parsing('https://epd.expasy.org/epd/wwwtmp/hg38_C2y3h.fa')
+#
+# with open('dirty_sequences.txt', 'w+') as f:
+#     f.write(req.text)
 
 clean_sequences('dirty_sequences.txt')
 create_reverse_complementary_sequences('clean_sequences.txt')
