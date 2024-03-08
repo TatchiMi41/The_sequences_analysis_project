@@ -3,6 +3,7 @@ import random
 
 
 def parsing(url: str):
+    '''Obtaining nucleotide sequences from a database epd.expasy.org'''
     st_accept = 'text/html'
     st_useragent = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 '
                     'YaBrowser/23.11.0.0 Safari/537.36')
@@ -15,6 +16,7 @@ def parsing(url: str):
 
 
 def clean_sequences(file_name):
+    '''Creating clean sequences without unnecessary information'''
     with open(file_name, 'r') as f:
         lines = f.readlines()
 
@@ -39,6 +41,7 @@ def clean_sequences(file_name):
 
 
 def create_reverse_complementary_sequences(clean_sequensec_file):
+    '''Creation of back-complementary nucleotide sequences'''
     with open(clean_sequensec_file, 'r') as f:
         lines = f.readlines()
         reversed_lines = []
@@ -62,6 +65,7 @@ def create_reverse_complementary_sequences(clean_sequensec_file):
 
 
 def create_random_sequences(str_quantity):
+    '''Creating random sequences of nucleotides'''
     with open('random_sequences.txt', 'w+') as f:
         nucleotides = ['A', 'T', 'G', 'C']
         sequence = ''

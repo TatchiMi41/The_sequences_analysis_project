@@ -1,0 +1,7 @@
+ID	PropertyName	AA	AC	AG	AT	CA	CC	CG	CT	GA	GC	GG	GT	TA	TC	TG	TT	Authors	
+2	Stacking energy	-12	-11.8	-11.5	-10.6	-12.3	-9.5	-13.1	-11.5	-11.4	-13.2	-9.5	-11.8	-11.2	-11.4	-12.3	-12	Sponer, J. ; Gabb, H. A. ; Leszczynski, J. ; Hobza, P.	
+18	Mobility to bend towards major groove	1.18	1.06	1.06	1.12	1.06	0.99	1.02	1.04	1.08	0.98	1	1.02	1.07	1.03	1.03	1.09	Gartenberg, M. R. ; Crothers, D. M.	
+63	Roll	1.4	1.4	5.5	-1.2	-1.2	3.9	6.2	5.5	0.4	-6.8	3.9	1.4	-0.6	0.4	-1.2	1.4	Perez, A. ; Noy, A. ; Lankas, F. ; Luque, F. J. ; Orozco, M.	
+65	Slide	-0.16	-0.43	0.34	-0.57	1.88	0.28	0.68	0.34	-0.01	0.31	0.28	-0.43	0.38	-0.01	1.88	-0.16	Perez, A. ; Noy, A. ; Lankas, F. ; Luque, F. J. ; Orozco, M.	
+67	Slide stiffness	2.26	3.03	2.03	3.83	1.78	1.65	2	2.03	1.93	2.61	1.65	3.03	1.2	1.93	1.78	2.26	Goni, J. R. ; Perez, A. ; Torrents, D. ; Orozco, M.	
+69	Roll stiffness	0.02	0.023	0.019	0.022	0.017	0.019	0.016	0.019	0.02	0.026	0.019	0.023	0.016	0.02	0.017	0.02	Goni, J. R. ; Perez, A. ; Torrents, D. ; Orozco, M.	
