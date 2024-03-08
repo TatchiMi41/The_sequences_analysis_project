@@ -80,13 +80,40 @@ def create_random_sequences(str_quantity):
 
 def calculate_data_dinucleotide_property_database(sequences_file):
     df = pd.read_csv('Dinucleotide Property Database.txt', sep='\t')
+    print(df.head(7))
     with open(sequences_file, 'r') as f:
         lines = f.readlines()
-        _stacking_energy = {i: 0 for i in range(-50, 31)}
+        dictionary_stacking_energy = {i: 0 for i in range(-50, 31)}
+        dictionary_mobility = {i: 0 for i in range(-50, 31)}
+        dictionary_roll = {i: 0 for i in range(-50, 31)}
+        dictionary_slide = {i: 0 for i in range(-50, 31)}
+        dictionary_slide_stiffness = {i: 0 for i in range(-50, 31)}
+        dictionary_roll_stiffness = {i: 0 for i in range(-50, 31)}
         for line in lines:
-            for nuleotide in line:
+            n = -50
+            for nuleotide in range(len(line) - 1):
                 dinucleotide = ''
-                dinucleotide += nuleotide + line[line.index(nuleotide) + 1]
+                dinucleotide += line[nuleotide] + line[nuleotide + 1]
+                try:
+                    dictionary_stacking_energy[n] += df.at[0, dinucleotide]
+                    dictionary_mobility[n] += df.at[1, dinucleotide]
+                    dictionary_roll[n] += df.at[2, dinucleotide]
+                    dictionary_slide[n] += df.at[3, dinucleotide]
+                    dictionary_slide_stiffness[n] += df.at[4, dinucleotide]
+                    dictionary_roll_stiffness[n] += df.at[5, dinucleotide]
+                except KeyError:
+                    if n != -1:
+                        n += 1
+                    else:
+                        n += 2
+                if n != -1:
+                    n += 1
+                else:
+                    n += 2
+
+        print(dictionary_stacking_energy)
+        print(dictionary_roll)
+        print(dictionary_slide)
 
 
 # req = parsing('https://epd.expasy.org/epd/wwwtmp/hg38_C2y3h.fa')
@@ -95,5 +122,6 @@ def calculate_data_dinucleotide_property_database(sequences_file):
 #     f.write(req.text)
 
 clean_sequences('dirty_sequences.txt')
-create_reverse_complementary_sequences('clean_sequences.txt')
-create_random_sequences(29598)
+# create_reverse_complementary_sequences('clean_sequences.txt')
+# create_random_sequences(29598)
+calculate_data_dinucleotide_property_database('clean_sequences.txt')
