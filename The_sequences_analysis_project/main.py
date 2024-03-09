@@ -2,6 +2,7 @@ import requests
 import random
 import pandas as pd
 import matplotlib.pyplot as plt
+from collections import defaultdict
 
 
 def parsing(url: str):
@@ -82,77 +83,31 @@ def create_random_sequences(str_quantity):
 def calculate_data_dinucleotide_property_database(sequences_file):
     df = pd.read_csv('Dinucleotide Property Database.txt', sep='\t')
     print(df.head(7))
+
+    properties = ['stacking_energy', 'mobility', 'roll', 'slide', 'slide_stiffness', 'roll_stiffness']
+    dictionaries = {prop: {i: 0 for i in range(-50, 31)} for prop in properties}
+
     with open(sequences_file, 'r') as f:
         lines = f.readlines()
-        dictionary_stacking_energy = {i: 0 for i in range(-50, 31)}
-        dictionary_mobility = {i: 0 for i in range(-50, 31)}
-        dictionary_roll = {i: 0 for i in range(-50, 31)}
-        dictionary_slide = {i: 0 for i in range(-50, 31)}
-        dictionary_slide_stiffness = {i: 0 for i in range(-50, 31)}
-        dictionary_roll_stiffness = {i: 0 for i in range(-50, 31)}
         for line in lines:
             n = -50
             for nuleotide in range(len(line) - 1):
-                dinucleotide = ''
-                dinucleotide += line[nuleotide] + line[nuleotide + 1]
-                try:
-                    dictionary_stacking_energy[n] += df.at[0, dinucleotide]
-                    dictionary_mobility[n] += df.at[1, dinucleotide]
-                    dictionary_roll[n] += df.at[2, dinucleotide]
-                    dictionary_slide[n] += df.at[3, dinucleotide]
-                    dictionary_slide_stiffness[n] += df.at[4, dinucleotide]
-                    dictionary_roll_stiffness[n] += df.at[5, dinucleotide]
-                except KeyError:
-                    if n != -1:
-                        n += 1
-                    else:
-                        n += 2
-                if n != -1:
-                    n += 1
-                else:
-                    n += 2
+                dinucleotide = line[nuleotide] + line[nuleotide + 1]
+                for i, prop in enumerate(properties):
+                    try:
+                        dictionaries[prop][n] += df.at[i, dinucleotide]
+                    except KeyError:
+                        n += 1 if n != -1 else 2
+                n += 1 if n != -1 else 2
 
-        for key in dictionary_stacking_energy:
-            dictionary_stacking_energy[key] /= 29598
+    for dictionary in dictionaries.values():
+        for key in dictionary:
+            dictionary[key] /= 29598
 
-        for key in dictionary_mobility:
-            dictionary_mobility[key] /= 29598
-
-        for key in dictionary_slide:
-            dictionary_slide[key] /= 29598
-
-        for key in dictionary_roll:
-            dictionary_roll[key] /= 29598
-
-        for key in dictionary_roll_stiffness:
-            dictionary_roll_stiffness[key] /= 29598
-
-        for key in dictionary_slide_stiffness:
-            dictionary_slide_stiffness[key] /= 29598
-
+    for prop, dictionary in dictionaries.items():
         plt.figure(figsize=(10, 5))
-        plt.plot(dictionary_stacking_energy.keys(), dictionary_stacking_energy.values())
-        plt.savefig('graphics/stacking_energy.png')
-
-        plt.figure(figsize=(10, 5))
-        plt.plot(dictionary_mobility.keys(), dictionary_mobility.values())
-        plt.savefig('graphics/mobility.png')
-
-        plt.figure(figsize=(10, 5))
-        plt.plot(dictionary_slide.keys(), dictionary_slide.values())
-        plt.savefig('graphics/slide.png')
-
-        plt.figure(figsize=(10, 5))
-        plt.plot(dictionary_roll.keys(), dictionary_roll.values())
-        plt.savefig('graphics/roll.png')
-
-        plt.figure(figsize=(10, 5))
-        plt.plot(dictionary_roll_stiffness.keys(), dictionary_roll_stiffness.values())
-        plt.savefig('graphics/roll_stiffness.png')
-
-        plt.figure(figsize=(10, 5))
-        plt.plot(dictionary_slide_stiffness.keys(), dictionary_slide_stiffness.values())
-        plt.savefig('graphics/slide_stiffness.png')
+        plt.plot(dictionary.keys(), dictionary.values())
+        plt.savefig(f'graphics/{prop}.png')
 
 
 
