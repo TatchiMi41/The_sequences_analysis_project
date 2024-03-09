@@ -1,6 +1,7 @@
 import requests
 import random
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 def parsing(url: str):
@@ -111,9 +112,50 @@ def calculate_data_dinucleotide_property_database(sequences_file):
                 else:
                     n += 2
 
-        print(dictionary_stacking_energy)
-        print(dictionary_roll)
-        print(dictionary_slide)
+        for key in dictionary_stacking_energy:
+            dictionary_stacking_energy[key] /= 29598
+
+        for key in dictionary_mobility:
+            dictionary_mobility[key] /= 29598
+
+        for key in dictionary_slide:
+            dictionary_slide[key] /= 29598
+
+        for key in dictionary_roll:
+            dictionary_roll[key] /= 29598
+
+        for key in dictionary_roll_stiffness:
+            dictionary_roll_stiffness[key] /= 29598
+
+        for key in dictionary_slide_stiffness:
+            dictionary_slide_stiffness[key] /= 29598
+
+        plt.figure(figsize=(10, 5))
+        plt.plot(dictionary_stacking_energy.keys(), dictionary_stacking_energy.values())
+        plt.savefig('graphics/stacking_energy.png')
+
+        plt.figure(figsize=(10, 5))
+        plt.plot(dictionary_mobility.keys(), dictionary_mobility.values())
+        plt.savefig('graphics/mobility.png')
+
+        plt.figure(figsize=(10, 5))
+        plt.plot(dictionary_slide.keys(), dictionary_slide.values())
+        plt.savefig('graphics/slide.png')
+
+        plt.figure(figsize=(10, 5))
+        plt.plot(dictionary_roll.keys(), dictionary_roll.values())
+        plt.savefig('graphics/roll.png')
+
+        plt.figure(figsize=(10, 5))
+        plt.plot(dictionary_roll_stiffness.keys(), dictionary_roll_stiffness.values())
+        plt.savefig('graphics/roll_stiffness.png')
+
+        plt.figure(figsize=(10, 5))
+        plt.plot(dictionary_slide_stiffness.keys(), dictionary_slide_stiffness.values())
+        plt.savefig('graphics/slide_stiffness.png')
+
+
+
 
 
 # req = parsing('https://epd.expasy.org/epd/wwwtmp/hg38_C2y3h.fa')
