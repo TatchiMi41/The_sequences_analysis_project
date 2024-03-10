@@ -37,7 +37,7 @@ def clean_sequences(file_name):
     if sequence:
         cleaned_lines.append(sequence)
 
-    with open('clean_sequences.txt', 'w') as f:
+    with open('data/clean_sequences.txt', 'w') as f:
         for line in cleaned_lines:
             f.write(line + '\n')
 
@@ -61,14 +61,14 @@ def create_reverse_complementary_sequences(clean_sequensec_file):
             reversed_lines.append(complementary_line[::-1])
             complementary_line = ''
 
-    with open('reverse_complementary_sequences.txt', 'w+') as f:
+    with open('data/reverse_complementary_sequences.txt', 'w+') as f:
         for sequence in reversed_lines:
             f.write(sequence + '\n')
 
 
 def create_random_sequences(str_quantity):
     """Creating random sequences of nucleotides"""
-    with open('random_sequences.txt', 'w+') as f:
+    with open('data/random_sequences.txt', 'w+') as f:
         nucleotides = ['A', 'T', 'G', 'C']
         sequence = ''
         for string in range(str_quantity):
@@ -80,7 +80,7 @@ def create_random_sequences(str_quantity):
 
 
 def calculate_data_dinucleotide_property_database(sequences_file):
-    df = pd.read_csv('Dinucleotide Property Database.txt', sep='\t')
+    df = pd.read_csv('data/Dinucleotide Property Database.txt', sep='\t')
     print(df.head(7))
 
     properties = ['stacking_energy', 'mobility', 'roll', 'slide', 'slide_stiffness', 'roll_stiffness']
@@ -110,8 +110,7 @@ def calculate_data_dinucleotide_property_database(sequences_file):
 
 
 def calculate_data_tetranucleotide_property_database(sequences_file):
-    df = pd.read_csv('Table of tetranucleotides.csv', sep=';')
-    df.index.name = None
+    df = pd.read_csv('data/Table of tetranucleotides.csv', sep=';')
     print(df.head(5))
 
     dictionary_of_param = {i:0 for i in range(-50, 29) if i != 0}
@@ -134,14 +133,41 @@ def calculate_data_tetranucleotide_property_database(sequences_file):
     plt.figure(figsize=(10, 5))
     plt.plot(dictionary_of_param.keys(), dictionary_of_param.values())
     plt.savefig(f'graphics/graphic_of_tetranucleotides.png')
+
+
+def calculate_data_ultrasonic_dinucleotides_property_database(sequences_file):
+    df = pd.read_csv('data/Ultrasonic_dinucleotides.csv', sep=';')
+    print(df.head(5))
+
+    dictionary_of_param = {i: 0 for i in range(-50, 31) if i != 0}
+
+    with open(sequences_file, 'r') as f:
+        lines = f.readlines()
+        for line in lines:
+            n = -50
+            for tetranucleotide in range(len(line) - 2):
+                substring = line[tetranucleotide:tetranucleotide + 2]
+                try:
+                    dictionary_of_param[n] += df.at[1, substring]
+                    n += 1 if n != -1 else 2
+                except KeyError:
+                    n += 1 if n != -1 else 2
+
+    for key in dictionary_of_param:
+        dictionary_of_param[key] /= 29598
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(dictionary_of_param.keys(), dictionary_of_param.values())
+    plt.savefig(f'graphics/graphic_of_ultrasonic_dinucleotides.png')
 # req = parsing('https://epd.expasy.org/epd/wwwtmp/hg38_C2y3h.fa')
 #
 # with open('dirty_sequences.txt', 'w+') as f:
 #     f.write(req.text)
 
-clean_sequences('dirty_sequences.txt')
-create_reverse_complementary_sequences('clean_sequences.txt')
-create_random_sequences(29598)
-calculate_data_dinucleotide_property_database('clean_sequences.txt')
+# clean_sequences('dirty_sequences.txt')
+# create_reverse_complementary_sequences('clean_sequences.txt')
+# create_random_sequences(29598)
+# calculate_data_dinucleotide_property_database('clean_sequences.txt')
 
-calculate_data_tetranucleotide_property_database('clean_sequences.txt')
+# calculate_data_tetranucleotide_property_database('clean_sequences.txt')
+calculate_data_ultrasonic_dinucleotides_property_database('clean_sequences.txt')
