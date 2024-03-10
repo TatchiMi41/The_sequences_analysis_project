@@ -2,7 +2,6 @@ import requests
 import random
 import pandas as pd
 import matplotlib.pyplot as plt
-from collections import defaultdict
 
 
 def parsing(url: str):
@@ -85,7 +84,7 @@ def calculate_data_dinucleotide_property_database(sequences_file):
     print(df.head(7))
 
     properties = ['stacking_energy', 'mobility', 'roll', 'slide', 'slide_stiffness', 'roll_stiffness']
-    dictionaries = {prop: {i: 0 for i in range(-50, 31)} for prop in properties}
+    dictionaries = {prop: {i: 0 for i in range(-50, 31) if i != 0} for prop in properties}
 
     with open(sequences_file, 'r') as f:
         lines = f.readlines()
@@ -110,15 +109,39 @@ def calculate_data_dinucleotide_property_database(sequences_file):
         plt.savefig(f'graphics/{prop}.png')
 
 
+def calculate_data_tetranucleotide_property_database(sequences_file):
+    df = pd.read_csv('Table of tetranucleotides.csv', sep=';')
+    df.index.name = None
+    print(df.head(5))
 
+    dictionary_of_param = {i:0 for i in range(-50, 29) if i != 0}
 
+    with open(sequences_file, 'r') as f:
+        lines = f.readlines()
+        for line in lines:
+            n = -50
+            for tetranucleotide in range(len(line) - 4):
+                substring = line[tetranucleotide:tetranucleotide+4]
+                try:
+                    dictionary_of_param[n] += df.at[1, substring]
+                    n += 1 if n != -1 else 2
+                except KeyError:
+                    n += 1 if n != -1 else 2
 
+    for key in dictionary_of_param:
+        dictionary_of_param[key] /= 29598
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(dictionary_of_param.keys(), dictionary_of_param.values())
+    plt.savefig(f'graphics/graphic_of_tetranucleotides.png')
 # req = parsing('https://epd.expasy.org/epd/wwwtmp/hg38_C2y3h.fa')
 #
 # with open('dirty_sequences.txt', 'w+') as f:
 #     f.write(req.text)
 
 clean_sequences('dirty_sequences.txt')
-# create_reverse_complementary_sequences('clean_sequences.txt')
-# create_random_sequences(29598)
+create_reverse_complementary_sequences('clean_sequences.txt')
+create_random_sequences(29598)
 calculate_data_dinucleotide_property_database('clean_sequences.txt')
+
+calculate_data_tetranucleotide_property_database('clean_sequences.txt')
