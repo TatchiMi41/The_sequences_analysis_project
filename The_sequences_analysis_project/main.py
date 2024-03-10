@@ -159,15 +159,44 @@ def calculate_data_ultrasonic_dinucleotides_property_database(sequences_file):
     plt.figure(figsize=(10, 5))
     plt.plot(dictionary_of_param.keys(), dictionary_of_param.values())
     plt.savefig(f'graphics/graphic_of_ultrasonic_dinucleotides.png')
+
+
+def calculate_data_hexanucleotides_property_database(sequences_file):
+    df = pd.read_csv('data/Table of hexanucleotides.csv', sep=';')
+    print(df.head(5))
+
+    dictionary_of_param = {i: 0 for i in range(-50, 27) if i != 0}
+
+    with open(sequences_file, 'r') as f:
+        lines = f.readlines()
+        for line in lines:
+            n = -50
+            for tetranucleotide in range(len(line) - 6):
+                substring = line[tetranucleotide:tetranucleotide + 6]
+                try:
+                    dictionary_of_param[n] += df.at[0, substring]
+                    n += 1 if n != -1 else 2
+                except KeyError:
+                    n += 1 if n != -1 else 2
+
+    for key in dictionary_of_param:
+        dictionary_of_param[key] /= 29598
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(dictionary_of_param.keys(), dictionary_of_param.values())
+    plt.savefig(f'graphics/graphic_of_hexanucleotides.png')
+
+
 # req = parsing('https://epd.expasy.org/epd/wwwtmp/hg38_C2y3h.fa')
 #
-# with open('dirty_sequences.txt', 'w+') as f:
+# with open('data/dirty_sequences.txt', 'w+') as f:
 #     f.write(req.text)
 
-# clean_sequences('dirty_sequences.txt')
-# create_reverse_complementary_sequences('clean_sequences.txt')
-# create_random_sequences(29598)
-# calculate_data_dinucleotide_property_database('clean_sequences.txt')
+clean_sequences('data/dirty_sequences.txt')
+create_reverse_complementary_sequences('data/clean_sequences.txt')
+create_random_sequences(29598)
+calculate_data_dinucleotide_property_database('data/clean_sequences.txt')
 
-# calculate_data_tetranucleotide_property_database('clean_sequences.txt')
-calculate_data_ultrasonic_dinucleotides_property_database('clean_sequences.txt')
+calculate_data_tetranucleotide_property_database('data/clean_sequences.txt')
+calculate_data_ultrasonic_dinucleotides_property_database('data/clean_sequences.txt')
+calculate_data_hexanucleotides_property_database('data/clean_sequences.txt')
