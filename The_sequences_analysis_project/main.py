@@ -4,6 +4,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from typing import Dict
+from matplotlib.ticker import FixedLocator
+
 
 
 def parsing(url: str):
@@ -164,7 +166,6 @@ def calculate_ultrasonic_dinucleotide_properties(sequences_file: str) -> dict:
     """
 
     df = pd.read_csv('data/Ultrasonic_dinucleotides.csv', sep=';')
-    print(df.head(5))
 
     dictionary_of_param = {i: 0 for i in range(-50, 31) if i != 0}
 
@@ -236,18 +237,24 @@ def create_graph(original_data, random_data, title, save_path, reverse_data=None
         save_path (str): The path to save the graph.
         reverse_data (dict): A dictionary with data for a back-complementary sequence.
     """
+
+    LIMITS = -80, 30
+
     plt.figure(figsize=(40, 7))
     plt.title(title, fontweight='bold', fontsize=25, pad=10)
-    plt.xticks(np.arange(-80, 30, 1))
+    plt.xticks(np.arange(*LIMITS, 1))
     plt.xlabel('Position relative to TSS', fontsize=16, labelpad=10, color='#B22222')
     plt.ylabel('Average parameter value', fontsize=16, labelpad=10, color='#B22222')
     plt.grid()
+
+    plt.xticks([i for i in range(-50, 31) if i != 0], [str(i) for i in range(-50, 31) if i != 0])
+
     plt.plot(original_data.keys(), original_data.values(), label='Original sequences')
     if reverse_data:
         plt.plot(reverse_data.keys(), reverse_data.values(), label='Reverse complementary sequences')
     plt.plot(random_data.keys(), random_data.values(), label='Random sequences')
 
-    plt.legend()
+    plt.legend(fontsize=18)
     plt.savefig(save_path)
 
 
