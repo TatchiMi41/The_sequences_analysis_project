@@ -249,10 +249,10 @@ def create_graph(original_data, random_data, title, save_path, reverse_data=None
 
     plt.xticks([i for i in range(-50, 31) if i != 0], [str(i) for i in range(-50, 31) if i != 0])
 
-    plt.plot(original_data.keys(), original_data.values(), label='Original sequences')
+    plt.plot(original_data.keys(), original_data.values(), label='Original sequences', marker='o', markersize=3)
     if reverse_data:
-        plt.plot(reverse_data.keys(), reverse_data.values(), label='Reverse complementary sequences')
-    plt.plot(random_data.keys(), random_data.values(), label='Random sequences')
+        plt.plot(reverse_data.keys(), reverse_data.values(), label='Reverse complementary sequences', marker='o', markersize=3)
+    plt.plot(random_data.keys(), random_data.values(), label='Random sequences',  marker='o', markersize=3)
 
     plt.legend(fontsize=18)
     plt.savefig(save_path)
