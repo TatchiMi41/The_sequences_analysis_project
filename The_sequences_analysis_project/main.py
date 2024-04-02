@@ -118,9 +118,18 @@ def calculate_dinucleotide_properties(sequences_file: str) -> dict:
     return dictionaries
 
 
-def calculate_tetranucleotide_properties(sequences_file):
+def calculate_tetranucleotide_properties(sequences_file: str) -> dict:
+    """
+    Calculates tetranucleotide properties based on the given sequence file.
+
+    Args:
+        sequences_file (str): Path to the file containing sequences.
+
+    Returns:
+        dict: A dictionary containing tetranucleotide properties.
+    """
+
     df = pd.read_csv('data/Table of tetranucleotides.csv', sep=';')
-    print(df.head(5))
 
     dictionary_of_param = {i: 0 for i in range(-50, 29) if i != 0}
 
@@ -143,7 +152,17 @@ def calculate_tetranucleotide_properties(sequences_file):
     return dictionary_of_param
 
 
-def calculate_ultrasonic_dinucleotide_properties(sequences_file):
+def calculate_ultrasonic_dinucleotide_properties(sequences_file: str) -> dict:
+    """
+    Calculates ultrasonic dinucleotide properties based on the given sequence file.
+
+    Args:
+        sequences_file (str): Path to the file containing sequences.
+
+    Returns:
+        dict: A dictionary containing ultrasonic dinucleotide properties.
+    """
+
     df = pd.read_csv('data/Ultrasonic_dinucleotides.csv', sep=';')
     print(df.head(5))
 
